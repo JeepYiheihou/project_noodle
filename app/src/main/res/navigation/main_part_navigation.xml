@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_part_navigation"
+    app:startDestination="@id/galleryListFragment">
+
+    <fragment
+        android:id="@+id/galleryListFragment"
+        android:name="com.example.projectnoodle.GalleryListFragment"
+        android:label="fragment_gallery_list"
+        tools:layout="@layout/fragment_gallery_list" />
+    <fragment
+        android:id="@+id/aboutUserFragment"
+        android:name="com.example.projectnoodle.AboutUserFragment"
+        android:label="fragment_about_user"
+        tools:layout="@layout/fragment_about_user" />
+</navigation>

@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Project Noodle</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="menu_gallery_list_button_title">Videos</string>
+    <string name="menu_user_button_title">User</string>
+    <string name="text_user_hint">User name</string>
+    <string name="text_password_hint">Password</string>
+    <string name="text_login_button">Login</string>
+    <string name="text_logo_fragment">Hello Noodle!</string>
+</resources>

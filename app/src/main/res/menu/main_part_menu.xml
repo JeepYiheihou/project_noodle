@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/galleryListFragment"
+        android:icon="@drawable/ic_baseline_ondemand_video_24"
+        android:title="@string/menu_gallery_list_button_title" />
+    <item
+        android:id="@+id/aboutUserFragment"
+        android:icon="@drawable/ic_baseline_person_24"
+        android:title="@string/menu_user_button_title" />
+</menu>
