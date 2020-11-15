@@ -1,4 +1,7 @@
 package com.example.projectnoodle
 
-const val HTTP_QUERY_CONTENT_API_PREFIX = "http://24.17.109.13/api/content"
-const val HTTP_QUERY_USER_API_PREFIX = "http://24.17.109.13/api/user"
+const val HTTP_QUERY_USER_API_PREFIX = "https://jiachenbai.com:3000/api/user"
+const val HTTP_QUERY_CONTENT_API_PREFIX = "https://jiachenbai.com:3000/api/content"
+const val HTTP_QUERY_THUMB_API_PREFIX = "https://jiachenbai.com:3000/api/thumb"
+
+const val CONTENTS_PER_PAGE = 5

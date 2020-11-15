@@ -31,7 +31,6 @@ class RootContainerFragment : Fragment() {
             transaction.replace(R.id.containedFragment, targetFragment)
             transaction.commit()
         })
-
     }
 
     override fun onCreateView(

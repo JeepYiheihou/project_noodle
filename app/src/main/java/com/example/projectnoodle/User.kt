@@ -14,7 +14,7 @@ import kotlinx.android.parcel.Parcelize
     @SerializedName("gender") val gender: String,
     @SerializedName("email") val email: String,
     @SerializedName("phone") val phone: String,
-    @SerializedName("token") val token: Token
+    @SerializedName("token") var token: Token
 ): Parcelable
 
 @Parcelize data class  Token(

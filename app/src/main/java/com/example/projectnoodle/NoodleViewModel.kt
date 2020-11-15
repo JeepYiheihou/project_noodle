@@ -1,21 +1,35 @@
 package com.example.projectnoodle
 
+import android.app.Application
+import android.util.Log
+import android.widget.Toast
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.paging.toLiveData
+import com.android.volley.AuthFailureError
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
+import com.google.gson.Gson
+import org.json.JSONArray
+import org.json.JSONObject
 
 enum class DataStatus(val value: Int) {
     CAN_LOAD_MORE(1),
-    NO_MORE(2),
-    NETWORK_ERROR(3)
+    LOADING(2),
+    NO_MORE(3),
+    NETWORK_ERROR(4)
+}
+
+enum class HTTPQueryBehavior {
+    resetContentList
 }
 
 /*
  * The view model collecting data to monitor and control the app.
  */
-class NoodleViewModel : ViewModel() {
+class NoodleViewModel(application: Application) : AndroidViewModel(application) {
 
     /* Log in status parameters. */
     var currentTypedUserName = ""
@@ -23,7 +37,9 @@ class NoodleViewModel : ViewModel() {
     private val _isLoggedInLive = MutableLiveData<Boolean>()
     val isLoggedInLive : LiveData<Boolean> get() = _isLoggedInLive
 
-    /* User's data. If it's null, then pop to login page. */
+    private val _isTokenRetryNeeded = MutableLiveData<Boolean>(false)
+    val isTokenRetryNeeded : LiveData<Boolean> get() = _isTokenRetryNeeded
+
     private val _userLive = MutableLiveData<User>()
     val userLive : LiveData<User> get() = _userLive
 
@@ -31,39 +47,89 @@ class NoodleViewModel : ViewModel() {
     private val _dataStatusLive = MutableLiveData<DataStatus>()
     val dataStatusLive : LiveData<DataStatus> get() = _dataStatusLive
 
-    /* To track the content list of the gallery list page. */
-    private val _contentListLive = MutableLiveData<List<ContentItem>>()
-    val contentListLive : LiveData<List<ContentItem>> get() = _contentListLive
-
-    /* Each time after refresh, Android tries to automatically scroll to bottom.
-     * This is not what we want so after refresh, use the flag to mark it and scroll back to top. */
-    var needToScrollToTop = true
-
-    /* How many contents we want to load from backend server per page. */
-    private val contentsPerPage = 50
-
-    /* Current latest loaded item number in gallery list*/
-    private val contentCount = 0
+    fun updateDataStatus(status: DataStatus) {
+        _dataStatusLive.value = status
+    }
 
     fun updateLogStatus(isLoggedIn: Boolean) {
         _isLoggedInLive.value = isLoggedIn
     }
 
-    fun fetchData() {
-        val stringRequest = StringRequest(
-            Request.Method.GET,
-            getBatchFetchUrl(),
-            {
-                _dataStatusLive.value = DataStatus.NETWORK_ERROR
-            },
-            {
-                _dataStatusLive.value = DataStatus.NETWORK_ERROR
+    val contentListLive = ContentDataSourceFactory(application, this).toLiveData(1)
+
+    fun login() {
+        if (_isTokenRetryNeeded.value == true) {
+            Toast.makeText(getApplication(), "Another pending query going on", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val stringRequest = object : StringRequest(
+                Request.Method.POST,
+                "${HTTP_QUERY_USER_API_PREFIX}/login",
+                {
+                    with(Gson().fromJson(it, User::class.java)) {
+                        _userLive.value = this
+                    }
+                    _isLoggedInLive.value = true
+                },
+                {
+                    Log.e("volley!", it.toString())
+                    Toast.makeText(getApplication(), "Error logging in", Toast.LENGTH_SHORT).show()
+                }
+        ) {
+            override fun getBodyContentType(): String {
+                return "application/json"
             }
-        )
+            @Throws(AuthFailureError::class)
+            override fun getBody(): ByteArray {
+                val params = HashMap<String, String>()
+                params["name"] = currentTypedUserName
+                params["password"] = currentTypedPassword
+                return JSONObject(params as Map<*, *>).toString().toByteArray()
+            }
+        }
+        VolleySingleton.getInstance(getApplication()).requestQueue.add(stringRequest)
     }
 
-    private fun getBatchFetchUrl(): String {
+    fun retryToken() {
+        val stringRequest = object : StringRequest(
+                Request.Method.POST,
+                "${HTTP_QUERY_USER_API_PREFIX}/login",
+                {
+                    with(Gson().fromJson(it, User::class.java)) {
+                        _userLive.value = this
+                    }
+                    val v = _isTokenRetryNeeded.value
+                    _isTokenRetryNeeded.value = false
+                },
+                {
+                    Toast.makeText(getApplication(), "Error retrying logging in", Toast.LENGTH_SHORT).show()
+                    _isLoggedInLive.value = false
+                }
+        ) {
+            override fun getBodyContentType(): String {
+                return "application/json"
+            }
+            @Throws(AuthFailureError::class)
+            override fun getBody(): ByteArray {
+                val params = HashMap<String, String>()
+                params["name"] = currentTypedUserName
+                params["password"] = currentTypedPassword
+                return JSONObject(params as Map<*, *>).toString().toByteArray()
+            }
+        }
+        VolleySingleton.getInstance(getApplication()).requestQueue.add(stringRequest)
+    }
+
+    fun resetQuery() {
+        contentListLive.value?.dataSource?.invalidate()
+    }
+
+    fun getUserAndTokenString(): String {
         val user = userLive.value
-        return "${HTTP_QUERY_CONTENT_API_PREFIX}/find-by-range/?id=${user?.id}&token=${user?.token?.token}&start=${contentCount+1}&end=${contentCount+contentsPerPage+1}"
+        return "id=${user?.id}&token=${user?.token?.token}"
+    }
+
+    fun generateFullThumbUrl(thumbUrl: String): String {
+        return "${HTTP_QUERY_THUMB_API_PREFIX}/${thumbUrl}?${getUserAndTokenString()}"
     }
 }

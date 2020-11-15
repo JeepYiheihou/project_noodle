@@ -38,6 +38,7 @@ data class ContentItem (
     @SerializedName("type") val type: String,
     @SerializedName("thumbUrl") val thumbUrl: String,
     @SerializedName("realUrl") val realUrl: String,
+    @SerializedName("height") val height: Int,
     @SerializedName("width") val width: Int,
     @SerializedName("length") val length: Int
 ): Parcelable
