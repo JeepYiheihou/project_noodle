@@ -46,14 +46,13 @@ class GalleryListFragment : Fragment() {
             noodleViewModel.resetQuery()
         }
 
-        noodleViewModel.contentListLive.observe(this.requireActivity(), Observer {
+        noodleViewModel.contentListLive.observe(requireActivity(), Observer {
             galleryListAdapter.submitList(it)
         })
 
-        noodleViewModel.dataStatusLive.observe(this.requireActivity(), Observer {
-            if (it == DataStatus.CAN_LOAD_MORE) {
-                binding.galleryListFragmentSwipe.isRefreshing = false
-            }
+        noodleViewModel.networkStatus.observe(requireActivity(), Observer {
+            galleryListAdapter.updateNetworkStatus(it)
+            binding.galleryListFragmentSwipe.isRefreshing = it == NetworkStatus.INITIAL_LOADING
         })
     }
 }

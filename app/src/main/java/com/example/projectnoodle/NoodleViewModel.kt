@@ -3,10 +3,7 @@ package com.example.projectnoodle
 import android.app.Application
 import android.util.Log
 import android.widget.Toast
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import androidx.paging.toLiveData
 import com.android.volley.AuthFailureError
 import com.android.volley.Request
@@ -15,15 +12,19 @@ import com.google.gson.Gson
 import org.json.JSONArray
 import org.json.JSONObject
 
-enum class DataStatus(val value: Int) {
-    CAN_LOAD_MORE(1),
-    LOADING(2),
-    NO_MORE(3),
-    NETWORK_ERROR(4)
+enum class NetworkStatus {
+    INITIAL_LOADING,
+    LOADING,
+    LOADED,
+    NO_MORE,
+    NETWORK_ERROR
 }
 
-enum class HTTPQueryBehavior {
-    resetContentList
+enum class TokenStatus {
+    ACTIVE,
+    EXPIRED,
+    UPDATING,
+    FAILED
 }
 
 /*
@@ -37,31 +38,21 @@ class NoodleViewModel(application: Application) : AndroidViewModel(application) 
     private val _isLoggedInLive = MutableLiveData<Boolean>()
     val isLoggedInLive : LiveData<Boolean> get() = _isLoggedInLive
 
-    private val _isTokenRetryNeeded = MutableLiveData<Boolean>(false)
-    val isTokenRetryNeeded : LiveData<Boolean> get() = _isTokenRetryNeeded
+    private val _tokenStatus = MutableLiveData<TokenStatus>()
 
     private val _userLive = MutableLiveData<User>()
     val userLive : LiveData<User> get() = _userLive
-
-    /* To track the "load more" status of the gallery list page. */
-    private val _dataStatusLive = MutableLiveData<DataStatus>()
-    val dataStatusLive : LiveData<DataStatus> get() = _dataStatusLive
-
-    fun updateDataStatus(status: DataStatus) {
-        _dataStatusLive.value = status
-    }
 
     fun updateLogStatus(isLoggedIn: Boolean) {
         _isLoggedInLive.value = isLoggedIn
     }
 
-    val contentListLive = ContentDataSourceFactory(application, this).toLiveData(1)
+    private val factory = ContentDataSourceFactory(application, this)
+    val contentListLive = factory.toLiveData(1)
+
+    val networkStatus = Transformations.switchMap(factory.contentDataSource) { it.networkStatusLive }
 
     fun login() {
-        if (_isTokenRetryNeeded.value == true) {
-            Toast.makeText(getApplication(), "Another pending query going on", Toast.LENGTH_SHORT).show()
-            return
-        }
         val stringRequest = object : StringRequest(
                 Request.Method.POST,
                 "${HTTP_QUERY_USER_API_PREFIX}/login",
@@ -98,8 +89,6 @@ class NoodleViewModel(application: Application) : AndroidViewModel(application) 
                     with(Gson().fromJson(it, User::class.java)) {
                         _userLive.value = this
                     }
-                    val v = _isTokenRetryNeeded.value
-                    _isTokenRetryNeeded.value = false
                 },
                 {
                     Toast.makeText(getApplication(), "Error retrying logging in", Toast.LENGTH_SHORT).show()
@@ -118,6 +107,10 @@ class NoodleViewModel(application: Application) : AndroidViewModel(application) 
             }
         }
         VolleySingleton.getInstance(getApplication()).requestQueue.add(stringRequest)
+    }
+
+    fun retry() {
+        factory.contentDataSource.value?.retry?.invoke()
     }
 
     fun resetQuery() {

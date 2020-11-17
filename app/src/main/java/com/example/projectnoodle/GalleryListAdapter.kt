@@ -5,77 +5,80 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagedListAdapter
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import kotlinx.android.synthetic.main.gallery_cell.view.*
+import kotlinx.android.synthetic.main.gallery_list_footer.view.*
 
-enum class PagerItemType(val value: Int) {
-    NORMAL_VIEW(1),
-    FOOTER_VIEW(2)
-}
+class GalleryListAdapter(private val viewModel: NoodleViewModel): PagedListAdapter<ContentItem, RecyclerView.ViewHolder>(DIFFCALLBACK) {
+    /* We don't want to display footer at initial load. For two reasons:
+    * 1. We already have the circling indicator from the swipe layout;
+    * 2. Having footer at initial load results in automatic scrolling to bottom. */
+    private var hasFooter = false
+    private var networkStatus : NetworkStatus? = null
 
-class GalleryListAdapter(val noodleViewModel: NoodleViewModel): PagedListAdapter<ContentItem, MyViewHolder>(DIFFCALLBACK) {
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val holder: MyViewHolder
-        if (viewType == PagerItemType.NORMAL_VIEW.value) {
-            holder = MyViewHolder(
-                    LayoutInflater.from(parent.context).inflate(R.layout.gallery_cell, parent, false)
-            )
-            holder.itemView.setOnClickListener{
-                // TODO: populate the on click listener
-            }
-
-        } else {
-            holder = MyViewHolder(
-                    LayoutInflater.from(parent.context).inflate(R.layout.gallery_cell, parent, false)
-            )
-        }
-        return holder
+    init {
+        viewModel.retry()
     }
 
-    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val contentItem = getItem(position)
-        with (holder.itemView) {
-            galleryShimmerCell.apply {
-                setShimmerColor(0x55FFFFFF)
-                setShimmerAngle(0)
-                startShimmerAnimation()
-            }
-            //galleryCellThumbImageView.layoutParams.height = contentItem.height
+    fun updateNetworkStatus(networkStatus: NetworkStatus?) {
+        this.networkStatus = networkStatus
+        if (networkStatus == NetworkStatus.INITIAL_LOADING) {
+            hideFooter()
+        } else {
+            showFooter()
         }
+    }
 
-        Glide.with(holder.itemView)
-                .load(getItem(position)?.thumbUrl?.let { noodleViewModel.generateFullThumbUrl(it) })
-                .placeholder(R.drawable.content_thumb_placeholder)
-                .listener(object : RequestListener<Drawable> {
-                    override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean
-                    ): Boolean {
-                        return false
-                    }
+    private fun hideFooter() {
+        if (hasFooter) {
+            notifyItemRemoved(itemCount - 1)
+        }
+        hasFooter = false
+    }
 
-                    override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean
-                    ): Boolean {
-                        return false.also { holder.itemView.galleryShimmerCell?.stopShimmerAnimation() }
-                    }
+    private fun showFooter() {
+        if (hasFooter) {
+            notifyItemChanged(itemCount - 1)
+        } else {
+            hasFooter = true
+            notifyItemInserted(itemCount - 1)
+        }
+    }
 
-                })
-                .into(holder.itemView.galleryCellThumbImageView)
+    override fun getItemCount(): Int {
+        return super.getItemCount() + if (hasFooter) 1 else 0
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (hasFooter && position == itemCount - 1) R.layout.gallery_list_footer else R.layout.gallery_cell
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            R.layout.gallery_cell -> ContentViewHolder.newInstance(parent, viewModel).also {
+                it.itemView.setOnClickListener {
+
+                }
+            }
+            else -> FooterViewHolder.newInstance(parent)
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder.itemViewType) {
+            R.layout.gallery_list_footer -> (holder as FooterViewHolder).bindWithNetworkStatus(networkStatus)
+            else -> {
+                val contentItem = getItem(position) ?: return
+                (holder as ContentViewHolder).bindWithContentItem(contentItem)
+            }
+        }
     }
 
     object DIFFCALLBACK : DiffUtil.ItemCallback<ContentItem>() {
@@ -89,4 +92,81 @@ class GalleryListAdapter(val noodleViewModel: NoodleViewModel): PagedListAdapter
     }
 }
 
-class MyViewHolder(itemView: View): RecyclerView.ViewHolder(itemView)
+class ContentViewHolder(itemView: View, private val viewModel: NoodleViewModel)
+    : RecyclerView.ViewHolder(itemView) {
+
+    companion object {
+        fun newInstance(parent: ViewGroup, viewModel: NoodleViewModel): ContentViewHolder {
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.gallery_cell, parent, false)
+            return ContentViewHolder(view, viewModel)
+        }
+    }
+    fun bindWithContentItem(contentItem: ContentItem) {
+        with (itemView) {
+            with (itemView) {
+                galleryShimmerCell.apply {
+                    setShimmerColor(0x55FFFFFF)
+                    setShimmerAngle(0)
+                    startShimmerAnimation()
+                }
+                //galleryCellThumbImageView.layoutParams.height = contentItem.height
+            }
+
+            Glide.with(itemView)
+                .load(contentItem?.thumbUrl?.let { viewModel.generateFullThumbUrl(it) })
+                .placeholder(R.drawable.content_thumb_placeholder)
+                .listener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        return false
+                    }
+
+                    override fun onResourceReady(
+                        resource: Drawable?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        dataSource: DataSource?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        return false.also { itemView.galleryShimmerCell?.stopShimmerAnimation() }
+                    }
+
+                })
+                .into(itemView.galleryCellThumbImageView)
+        }
+    }
+}
+class FooterViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    companion object {
+        fun newInstance(parent: ViewGroup): FooterViewHolder {
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.gallery_list_footer, parent, false)
+            (view.layoutParams as StaggeredGridLayoutManager.LayoutParams).isFullSpan = true
+            return FooterViewHolder(view)
+        }
+    }
+    fun bindWithNetworkStatus(networkStatus: NetworkStatus?) {
+        with(itemView) {
+            when (networkStatus) {
+                NetworkStatus.NETWORK_ERROR -> {
+                    galleryListFooterText.text = "Click to retry loading"
+                    galleryListFooterProgressBar.visibility = View.GONE
+                    isClickable = true
+                }
+                NetworkStatus.NO_MORE -> {
+                    galleryListFooterText.text = "All contents loaded"
+                    galleryListFooterProgressBar.visibility = View.GONE
+                    isClickable = false
+                }
+                else -> {
+                    galleryListFooterText.text = "Loading"
+                    galleryListFooterProgressBar.visibility = View.VISIBLE
+                    isClickable = false
+                }
+            }
+        }
+    }
+}
