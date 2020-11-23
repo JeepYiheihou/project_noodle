@@ -60,6 +60,7 @@ class SingleContentFragment : Fragment() {
     }
 
     private fun resizePlayer(width: Int, height: Int) {
+        return
         if (width == 0 || height == 0) return
         binding.singleContentVideoSurfaceView.layoutParams = FrameLayout.LayoutParams(
             binding.singleContentFragmentLayout.height * width / height,
