@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class VideoPlayerViewModel : ViewModel(){
-    val mediaPlayer = CustomMediaPlayer()
+    var mediaPlayer = CustomMediaPlayer()
     private val _progressBarVisibility = MutableLiveData(View.VISIBLE)
     val progressBarVisibility : LiveData<Int> get() = _progressBarVisibility
 
@@ -16,6 +16,10 @@ class VideoPlayerViewModel : ViewModel(){
     val videoResolution : LiveData<Pair<Int, Int>> = _videoResolution
 
     fun loadVideo() {
+        /* Dirty hack here. Each time loading a video, we'll need to re-create the mediaPlayer.
+         * Otherwise it will crash with same mediaPlayer calling prepareAsync multiple times. */
+        mediaPlayer.release()
+        mediaPlayer = CustomMediaPlayer()
         mediaPlayer.apply {
             reset()
             _progressBarVisibility.postValue(View.VISIBLE)

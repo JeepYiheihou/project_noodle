@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.observe
 import com.example.projectnoodle.databinding.FragmentRootContainerBinding
 
 /**
@@ -21,23 +22,24 @@ class RootContainerFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        noodleViewModel.isLoggedInLive.observe(this.requireActivity(), {
+        noodleViewModel.isLoggedInLive.observe(this.requireActivity()) {
             val transaction = parentFragmentManager.beginTransaction()
-            val targetFragment = if (it == false) {
+            val targetFragment = if (!it) {
                 LoginFragment()
             } else {
                 MainPartFragment()
             }
             transaction.replace(R.id.containedFragment, targetFragment)
             transaction.commit()
-        })
+        }
 
-        noodleViewModel.playContent.observe(this.requireActivity(), {
+        noodleViewModel.playContent.observe(this.requireActivity()) {
             val transaction = parentFragmentManager.beginTransaction()
             val targetFragment = SingleContentFragment()
             transaction.replace(R.id.containedFragment, targetFragment)
+            transaction.addToBackStack(targetFragment.javaClass.name);
             transaction.commit()
-        })
+        }
     }
 
     override fun onCreateView(

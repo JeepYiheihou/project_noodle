@@ -55,8 +55,8 @@ class SingleContentFragment : Fragment() {
 
             override fun surfaceDestroyed(p0: SurfaceHolder) { }
         })
-        lifecycle.addObserver(videoPlayerViewModel.mediaPlayer)
         videoPlayerViewModel.loadVideo()
+        lifecycle.addObserver(videoPlayerViewModel.mediaPlayer)
     }
 
     private fun resizePlayer(width: Int, height: Int) {
