@@ -40,7 +40,7 @@ class LogoFragment : Fragment() {
             override fun onFinish() {
                 /* First, observe the isLoggedInLive data. Define the behaviors */
                 val isLoggedIn = noodleViewModel.isLoggedInLive.value
-                noodleViewModel.updateLogStatus(isLoggedIn?: false)
+                noodleViewModel.updateLoginStatus(isLoggedIn?: false)
             }
         }.start()
     }

@@ -35,17 +35,24 @@ class NoodleViewModel(application: Application) : AndroidViewModel(application) 
     /* Log in status parameters. */
     var currentTypedUserName = ""
     var currentTypedPassword = ""
+
     private val _isLoggedInLive = MutableLiveData<Boolean>()
     val isLoggedInLive : LiveData<Boolean> get() = _isLoggedInLive
+    fun updateLoginStatus(isLoggedIn: Boolean) {
+        _isLoggedInLive.value = isLoggedIn
+    }
 
     private val _tokenStatus = MutableLiveData<TokenStatus>()
 
     private val _userLive = MutableLiveData<User>()
     val userLive : LiveData<User> get() = _userLive
 
-    fun updateLogStatus(isLoggedIn: Boolean) {
-        _isLoggedInLive.value = isLoggedIn
+    private val _playContent = MutableLiveData<Boolean>()
+    val playContent : LiveData<Boolean> get() = _playContent
+    fun updatePlayContentStatus(isPlayingContent: Boolean) {
+        _playContent.value = isPlayingContent
     }
+
 
     private val factory = ContentDataSourceFactory(application, this)
     val contentListLive = factory.toLiveData(1)

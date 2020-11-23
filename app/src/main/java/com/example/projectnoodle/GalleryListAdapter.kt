@@ -4,6 +4,8 @@ import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
+import androidx.navigation.Navigation
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -64,7 +66,7 @@ class GalleryListAdapter(private val viewModel: NoodleViewModel): PagedListAdapt
         return when (viewType) {
             R.layout.gallery_cell -> ContentViewHolder.newInstance(parent, viewModel).also {
                 it.itemView.setOnClickListener {
-
+                    viewModel.updatePlayContentStatus(true)
                 }
             }
             else -> FooterViewHolder.newInstance(parent)
@@ -101,45 +103,43 @@ class ContentViewHolder(itemView: View, private val viewModel: NoodleViewModel)
             return ContentViewHolder(view, viewModel)
         }
     }
+
     fun bindWithContentItem(contentItem: ContentItem) {
         with (itemView) {
-            with (itemView) {
-                galleryShimmerCell.apply {
-                    setShimmerColor(0x55FFFFFF)
-                    setShimmerAngle(0)
-                    startShimmerAnimation()
-                }
-                //galleryCellThumbImageView.layoutParams.height = contentItem.height
+            galleryShimmerCell.apply {
+                setShimmerColor(0x55FFFFFF)
+                setShimmerAngle(0)
+                startShimmerAnimation()
             }
-
-            Glide.with(itemView)
-                .load(contentItem?.thumbUrl?.let { viewModel.generateFullThumbUrl(it) })
-                .placeholder(R.drawable.content_thumb_placeholder)
-                .listener(object : RequestListener<Drawable> {
-                    override fun onLoadFailed(
-                        e: GlideException?,
-                        model: Any?,
-                        target: Target<Drawable>?,
-                        isFirstResource: Boolean
-                    ): Boolean {
-                        return false
-                    }
-
-                    override fun onResourceReady(
-                        resource: Drawable?,
-                        model: Any?,
-                        target: Target<Drawable>?,
-                        dataSource: DataSource?,
-                        isFirstResource: Boolean
-                    ): Boolean {
-                        return false.also { itemView.galleryShimmerCell?.stopShimmerAnimation() }
-                    }
-
-                })
-                .into(itemView.galleryCellThumbImageView)
+            //galleryCellThumbImageView.layoutParams.height = contentItem.height
         }
+
+        Glide.with(itemView)
+            .load(contentItem?.thumbUrl?.let { viewModel.generateFullThumbUrl(it) })
+            .placeholder(R.drawable.content_thumb_placeholder)
+            .listener(object : RequestListener<Drawable> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    return false
+                }
+
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    return false.also { itemView.galleryShimmerCell?.stopShimmerAnimation() }
+                }
+        }).into(itemView.galleryCellThumbImageView)
     }
 }
+
 class FooterViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
     companion object {
         fun newInstance(parent: ViewGroup): FooterViewHolder {

@@ -31,6 +31,13 @@ class RootContainerFragment : Fragment() {
             transaction.replace(R.id.containedFragment, targetFragment)
             transaction.commit()
         })
+
+        noodleViewModel.playContent.observe(this.requireActivity(), {
+            val transaction = parentFragmentManager.beginTransaction()
+            val targetFragment = SingleContentFragment()
+            transaction.replace(R.id.containedFragment, targetFragment)
+            transaction.commit()
+        })
     }
 
     override fun onCreateView(

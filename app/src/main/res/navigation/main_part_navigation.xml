@@ -15,9 +15,4 @@
         android:name="com.example.projectnoodle.AboutUserFragment"
         android:label="fragment_about_user"
         tools:layout="@layout/fragment_about_user" />
-    <fragment
-        android:id="@+id/singleContentFragment"
-        android:name="com.example.projectnoodle.SingleContentFragment"
-        android:label="fragment_single_content"
-        tools:layout="@layout/fragment_single_content" />
 </navigation>

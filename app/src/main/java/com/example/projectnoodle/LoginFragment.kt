@@ -55,7 +55,7 @@ class LoginFragment : Fragment() {
             noodleViewModel.login()
         }
         binding.button2.setOnClickListener {
-            noodleViewModel.updateLogStatus(true)
+            noodleViewModel.updateLoginStatus(true)
         }
     }
 }
