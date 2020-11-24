@@ -4,10 +4,13 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.FrameLayout
+import android.widget.SeekBar
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import com.example.projectnoodle.databinding.FragmentGalleryListBinding
+import androidx.lifecycle.lifecycleScope
 import com.example.projectnoodle.databinding.FragmentSingleContentBinding
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * A simple [Fragment] subclass.
@@ -35,15 +38,47 @@ class SingleContentFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        videoPlayerViewModel.progressBarVisibility.observe(requireActivity(), Observer {
-            binding.singleContentVideoLoadingProgressBar.visibility = it
-        })
+        with (videoPlayerViewModel) {
+            progressBarVisibility.observe(requireActivity(), Observer {
+                binding.singleContentVideoLoadingProgressBar.visibility = it
+            })
 
-        videoPlayerViewModel.videoResolution.observe(requireActivity(), Observer {
-            binding.singleContentVideoFrameLayout.post {
-                resizePlayer(it.first, it.second)
-            }
-        })
+            videoResolutionLive.observe(requireActivity(), Observer {
+                binding.videoControllerFrame.videoControllerSeekBar.max = mediaPlayer.duration
+                binding.singleContentVideoFrameLayout.post {
+                    resizePlayer(it.first, it.second)
+                }
+            })
+
+            controllerFrameVisibility.observe(requireActivity(), Observer {
+                binding.videoControllerFrame.videoControllerFrameLayout.visibility = it
+            })
+
+            bufferPercentLive.observe(requireActivity(), Observer {
+                binding.videoControllerFrame.videoControllerSeekBar.apply {
+                    this.secondaryProgress = this.max * it / 100
+                }
+            })
+
+            playerStatus.observe(requireActivity(), Observer {
+                val button = binding.videoControllerFrame.videoControllerButton
+                button.isClickable = true
+                when (it) {
+                    PlayerStatus.PAUSED ->
+                        button.setImageResource(R.drawable.ic_baseline_play_arrow_24)
+                    PlayerStatus.COMPLETED ->
+                        button.setImageResource(R.drawable.ic_baseline_replay_24)
+                    PlayerStatus.NOT_READY ->
+                        button.isClickable = false
+                    else ->
+                        button.setImageResource(R.drawable.ic_baseline_pause_24)
+                }
+            })
+        }
+
+        binding.singleContentVideoFrameLayout.setOnClickListener {
+            videoPlayerViewModel.toggleControllerVisibility()
+        }
 
         binding.singleContentVideoSurfaceView.holder.addCallback(object : SurfaceHolder.Callback{
             override fun surfaceCreated(p0: SurfaceHolder) { }
@@ -55,8 +90,24 @@ class SingleContentFragment : Fragment() {
 
             override fun surfaceDestroyed(p0: SurfaceHolder) { }
         })
+
+        binding.videoControllerFrame.videoControllerButton.setOnClickListener {
+            videoPlayerViewModel.togglePlayerStatus()
+        }
+
+        binding.videoControllerFrame.videoControllerSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    videoPlayerViewModel.seekToProgress(progress)
+                }
+            }
+            override fun onStartTrackingTouch(p0: SeekBar?) { }
+            override fun onStopTrackingTouch(p0: SeekBar?) { }
+        })
+
         videoPlayerViewModel.loadVideo()
         lifecycle.addObserver(videoPlayerViewModel.mediaPlayer)
+        updatePlayerProgress()
     }
 
     private fun resizePlayer(width: Int, height: Int) {
@@ -67,5 +118,14 @@ class SingleContentFragment : Fragment() {
             FrameLayout.LayoutParams.MATCH_PARENT,
             Gravity.CENTER
         )
+    }
+
+    private fun updatePlayerProgress() {
+        lifecycleScope.launch {
+            while (true) {
+                delay(500)
+                binding.videoControllerFrame.videoControllerSeekBar.progress = videoPlayerViewModel.mediaPlayer.currentPosition
+            }
+        }
     }
 }

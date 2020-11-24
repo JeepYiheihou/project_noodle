@@ -33,7 +33,7 @@
     </FrameLayout>
 
     <include
-        android:id="@+id/include"
+        android:id="@+id/videoControllerFrame"
         layout="@layout/video_controller"
         android:layout_width="0dp"
         android:layout_height="0dp"
