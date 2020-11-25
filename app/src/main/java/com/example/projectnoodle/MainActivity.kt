@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.fragment_single_content.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var noodleviewModel: NoodleViewModel
+    private lateinit var noodleViewModel: NoodleViewModel
     private lateinit var videoPlayerViewModel: VideoPlayerViewModel
 
 
@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.hide();
         window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
 
-        noodleviewModel = ViewModelProvider(this).get(NoodleViewModel::class.java)
+        noodleViewModel = ViewModelProvider(this).get(NoodleViewModel::class.java)
         videoPlayerViewModel = ViewModelProvider(this).get(VideoPlayerViewModel::class.java)
 
         binding = ActivityMainBinding.inflate(layoutInflater)

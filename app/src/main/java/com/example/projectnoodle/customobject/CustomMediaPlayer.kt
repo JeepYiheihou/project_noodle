@@ -1,4 +1,4 @@
-package com.example.projectnoodle
+package com.example.projectnoodle.customobject
 
 import android.media.MediaPlayer
 import androidx.lifecycle.Lifecycle

@@ -1,15 +1,15 @@
 package com.example.projectnoodle
 
 import android.app.Application
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.*
 import androidx.paging.toLiveData
 import com.android.volley.AuthFailureError
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
+import com.example.projectnoodle.customobject.VolleySingleton
+import com.example.projectnoodle.datasource.ContentDataSourceFactory
 import com.google.gson.Gson
-import org.json.JSONArray
 import org.json.JSONObject
 
 enum class NetworkStatus {
@@ -35,6 +35,10 @@ class NoodleViewModel(application: Application) : AndroidViewModel(application) 
     /* Log in status parameters. */
     var currentTypedUserName = ""
     var currentTypedPassword = ""
+    var currentLoggedInStatus = true
+
+    private val _trytry = MutableLiveData(false)
+    val trytry : LiveData<Boolean> get() = _trytry
 
     private val _isLoggedInLive = MutableLiveData<Boolean>()
     val isLoggedInLive : LiveData<Boolean> get() = _isLoggedInLive
@@ -70,7 +74,6 @@ class NoodleViewModel(application: Application) : AndroidViewModel(application) 
                     _isLoggedInLive.value = true
                 },
                 {
-                    Log.e("volley!", it.toString())
                     Toast.makeText(getApplication(), "Error logging in", Toast.LENGTH_SHORT).show()
                 }
         ) {

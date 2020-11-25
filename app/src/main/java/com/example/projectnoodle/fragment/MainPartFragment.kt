@@ -1,4 +1,4 @@
-package com.example.projectnoodle
+package com.example.projectnoodle.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
+import com.example.projectnoodle.R
 import com.example.projectnoodle.databinding.FragmentMainPartBinding
 
 /**
@@ -32,7 +33,9 @@ class MainPartFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val navController = Navigation.findNavController(requireActivity(), R.id.mainPartNavigationFragment)
+        val navController = Navigation.findNavController(requireActivity(),
+            R.id.mainPartNavigationFragment
+        )
         NavigationUI.setupWithNavController(binding.bottomNavigationView, navController)
     }
 }

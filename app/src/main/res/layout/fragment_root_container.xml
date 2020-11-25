@@ -5,7 +5,7 @@
     android:id="@+id/rootContainerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RootContainerFragment" >
+    tools:context=".fragment.RootContainerFragment" >
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/containedFragment"

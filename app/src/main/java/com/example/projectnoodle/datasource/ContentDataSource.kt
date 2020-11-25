@@ -1,13 +1,14 @@
-package com.example.projectnoodle
+package com.example.projectnoodle.datasource
 
 import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
+import com.example.projectnoodle.*
+import com.example.projectnoodle.customobject.VolleySingleton
 import com.google.gson.Gson
 
 
@@ -25,7 +26,7 @@ class ContentDataSource(private val context: Context, private val viewModel: Noo
         with (viewModel) {
             retry = null
             val user = userLive.value
-            val url = "${HTTP_QUERY_CONTENT_API_PREFIX}/find-by-range/?${getUserAndTokenString()}&start=${1}&end=${CONTENTS_PER_PAGE}"
+            val url = "$HTTP_QUERY_CONTENT_API_PREFIX/find-by-range/?${getUserAndTokenString()}&start=${1}&end=$CONTENTS_PER_PAGE"
             val stringRequest = StringRequest(
                 Request.Method.GET,
                 url,
@@ -50,7 +51,7 @@ class ContentDataSource(private val context: Context, private val viewModel: Noo
             retry = null
             val user = userLive.value
             val offset = params.key * CONTENTS_PER_PAGE
-            val url = "${HTTP_QUERY_CONTENT_API_PREFIX}/find-by-range/?${getUserAndTokenString()}&start=${offset+1}&end=${offset+CONTENTS_PER_PAGE}"
+            val url = "$HTTP_QUERY_CONTENT_API_PREFIX/find-by-range/?${getUserAndTokenString()}&start=${offset+1}&end=${offset+ CONTENTS_PER_PAGE}"
             val stringRequest = StringRequest(
                 Request.Method.GET,
                 url,

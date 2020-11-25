@@ -1,4 +1,4 @@
-package com.example.projectnoodle
+package com.example.projectnoodle.fragment
 
 import android.os.Bundle
 import android.view.*
@@ -8,6 +8,9 @@ import android.widget.SeekBar
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import com.example.projectnoodle.PlayerStatus
+import com.example.projectnoodle.R
+import com.example.projectnoodle.VideoPlayerViewModel
 import com.example.projectnoodle.databinding.FragmentSingleContentBinding
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -20,7 +23,6 @@ import kotlinx.coroutines.launch
 class SingleContentFragment : Fragment() {
     private lateinit var binding: FragmentSingleContentBinding
 
-    private val noodleViewModel: NoodleViewModel by activityViewModels()
     private val videoPlayerViewModel: VideoPlayerViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,28 +41,28 @@ class SingleContentFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         with (videoPlayerViewModel) {
-            progressBarVisibility.observe(requireActivity(), Observer {
+            progressBarVisibility.observe(viewLifecycleOwner, Observer {
                 binding.singleContentVideoLoadingProgressBar.visibility = it
             })
 
-            videoResolutionLive.observe(requireActivity(), Observer {
+            videoResolutionLive.observe(viewLifecycleOwner, Observer {
                 binding.videoControllerFrame.videoControllerSeekBar.max = mediaPlayer.duration
                 binding.singleContentVideoFrameLayout.post {
                     resizePlayer(it.first, it.second)
                 }
             })
 
-            controllerFrameVisibility.observe(requireActivity(), Observer {
+            controllerFrameVisibility.observe(viewLifecycleOwner, Observer {
                 binding.videoControllerFrame.videoControllerFrameLayout.visibility = it
             })
 
-            bufferPercentLive.observe(requireActivity(), Observer {
+            bufferPercentLive.observe(viewLifecycleOwner, Observer {
                 binding.videoControllerFrame.videoControllerSeekBar.apply {
                     this.secondaryProgress = this.max * it / 100
                 }
             })
 
-            playerStatus.observe(requireActivity(), Observer {
+            playerStatus.observe(viewLifecycleOwner, Observer {
                 val button = binding.videoControllerFrame.videoControllerButton
                 button.isClickable = true
                 when (it) {
@@ -105,7 +107,6 @@ class SingleContentFragment : Fragment() {
             override fun onStopTrackingTouch(p0: SeekBar?) { }
         })
 
-        videoPlayerViewModel.loadVideo()
         lifecycle.addObserver(videoPlayerViewModel.mediaPlayer)
         updatePlayerProgress()
     }

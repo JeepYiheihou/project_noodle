@@ -1,4 +1,4 @@
-package com.example.projectnoodle
+package com.example.projectnoodle.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

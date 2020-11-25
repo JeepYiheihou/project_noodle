@@ -1,15 +1,17 @@
-package com.example.projectnoodle
+package com.example.projectnoodle.fragment
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.example.projectnoodle.GalleryListAdapter
+import com.example.projectnoodle.NetworkStatus
+import com.example.projectnoodle.NoodleViewModel
+import com.example.projectnoodle.VideoPlayerViewModel
 import com.example.projectnoodle.databinding.FragmentGalleryListBinding
 
 /**
@@ -20,6 +22,7 @@ import com.example.projectnoodle.databinding.FragmentGalleryListBinding
 class GalleryListFragment : Fragment() {
     private lateinit var binding: FragmentGalleryListBinding
     private val noodleViewModel: NoodleViewModel by activityViewModels()
+    private val videoPlayerViewModel: VideoPlayerViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +39,7 @@ class GalleryListFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val galleryListAdapter = GalleryListAdapter(noodleViewModel)
+        val galleryListAdapter = GalleryListAdapter(noodleViewModel, videoPlayerViewModel)
         binding.galleryListRecyclerView.apply {
             adapter = galleryListAdapter
             layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
@@ -46,11 +49,11 @@ class GalleryListFragment : Fragment() {
             noodleViewModel.resetQuery()
         }
 
-        noodleViewModel.contentListLive.observe(requireActivity(), Observer {
+        noodleViewModel.contentListLive.observe(viewLifecycleOwner, Observer {
             galleryListAdapter.submitList(it)
         })
 
-        noodleViewModel.networkStatus.observe(requireActivity(), Observer {
+        noodleViewModel.networkStatus.observe(viewLifecycleOwner, Observer {
             galleryListAdapter.updateNetworkStatus(it)
             binding.galleryListFragmentSwipe.isRefreshing = it == NetworkStatus.INITIAL_LOADING
         })

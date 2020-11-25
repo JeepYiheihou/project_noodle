@@ -18,7 +18,9 @@ import com.bumptech.glide.request.target.Target
 import kotlinx.android.synthetic.main.gallery_cell.view.*
 import kotlinx.android.synthetic.main.gallery_list_footer.view.*
 
-class GalleryListAdapter(private val viewModel: NoodleViewModel): PagedListAdapter<ContentItem, RecyclerView.ViewHolder>(DIFFCALLBACK) {
+class GalleryListAdapter(private val noodleViewModel: NoodleViewModel,
+                         private val videoPlayerViewModel: VideoPlayerViewModel):
+    PagedListAdapter<ContentItem, RecyclerView.ViewHolder>(DIFFCALLBACK) {
     /* We don't want to display footer at initial load. For two reasons:
     * 1. We already have the circling indicator from the swipe layout;
     * 2. Having footer at initial load results in automatic scrolling to bottom. */
@@ -26,7 +28,7 @@ class GalleryListAdapter(private val viewModel: NoodleViewModel): PagedListAdapt
     private var networkStatus : NetworkStatus? = null
 
     init {
-        viewModel.retry()
+        noodleViewModel.retry()
     }
 
     fun updateNetworkStatus(networkStatus: NetworkStatus?) {
@@ -64,9 +66,10 @@ class GalleryListAdapter(private val viewModel: NoodleViewModel): PagedListAdapt
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            R.layout.gallery_cell -> ContentViewHolder.newInstance(parent, viewModel).also {
+            R.layout.gallery_cell -> ContentViewHolder.newInstance(parent, noodleViewModel).also {
                 it.itemView.setOnClickListener {
-                    viewModel.updatePlayContentStatus(true)
+                    noodleViewModel.updatePlayContentStatus(true)
+                    videoPlayerViewModel.playVideo()
                 }
             }
             else -> FooterViewHolder.newInstance(parent)

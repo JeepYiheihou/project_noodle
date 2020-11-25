@@ -1,4 +1,4 @@
-package com.example.projectnoodle
+package com.example.projectnoodle.customobject
 
 import android.content.Context
 import com.android.volley.RequestQueue
@@ -11,7 +11,7 @@ import com.android.volley.toolbox.Volley
 class VolleySingleton private constructor(context: Context) {
     companion object {
         private var INSTANCE : VolleySingleton?=null
-        fun getInstance(context: Context) = INSTANCE?: synchronized(this) {
+        fun getInstance(context: Context) = INSTANCE ?: synchronized(this) {
             VolleySingleton(context).also{ INSTANCE = it }
         }
     }

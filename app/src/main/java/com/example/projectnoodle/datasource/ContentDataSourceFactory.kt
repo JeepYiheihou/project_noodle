@@ -1,9 +1,11 @@
-package com.example.projectnoodle
+package com.example.projectnoodle.datasource
 
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
+import com.example.projectnoodle.ContentItem
+import com.example.projectnoodle.NoodleViewModel
 
 class ContentDataSourceFactory(private val context: Context, private val viewModel: NoodleViewModel)
     : DataSource.Factory<Int, ContentItem>() {

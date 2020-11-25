@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.projectnoodle.customobject.CustomMediaPlayer
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -68,7 +69,7 @@ class VideoPlayerViewModel : ViewModel(){
         }
     }
 
-    fun loadVideo() {
+    fun playVideo() {
         /* Dirty hack here. Each time loading a video, we'll need to re-create the mediaPlayer.
          * Otherwise it will crash with same mediaPlayer calling prepareAsync multiple times. */
         mediaPlayer.release()
