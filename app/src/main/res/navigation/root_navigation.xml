@@ -1,5 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/root_navigation">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_navigation"
+    app:startDestination="@id/logoFragment">
 
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.projectnoodle.fragment.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_mainPartFragment"
+            app:destination="@id/mainPartFragment"
+            app:popUpTo="@id/mainPartFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/logoFragment"
+        android:name="com.example.projectnoodle.fragment.LogoFragment"
+        android:label="fragment_logo"
+        tools:layout="@layout/fragment_logo" >
+        <action
+            android:id="@+id/action_logoFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_logoFragment_to_mainPartFragment"
+            app:destination="@id/mainPartFragment"
+            app:popUpTo="@id/mainPartFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/singleContentFragment"
+        android:name="com.example.projectnoodle.fragment.SingleContentFragment"
+        android:label="fragment_single_content"
+        tools:layout="@layout/fragment_single_content" />
+    <fragment
+        android:id="@+id/mainPartFragment"
+        android:name="com.example.projectnoodle.fragment.MainPartFragment"
+        android:label="fragment_main_part"
+        tools:layout="@layout/fragment_main_part" >
+        <action
+            android:id="@+id/action_mainPartFragment_to_singleContentFragment"
+            app:destination="@id/singleContentFragment" />
+    </fragment>
 </navigation>

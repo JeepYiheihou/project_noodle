@@ -8,7 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.observe
+import androidx.navigation.fragment.findNavController
 import com.example.projectnoodle.NoodleViewModel
+import com.example.projectnoodle.R
 import com.example.projectnoodle.databinding.FragmentLoginBinding
 
 
@@ -57,6 +60,12 @@ class LoginFragment : Fragment() {
         }
         binding.button2.setOnClickListener {
             noodleViewModel.updateLoginStatus(true)
+        }
+
+        noodleViewModel.isLoggedInLive.observe(viewLifecycleOwner) {
+            if (it) {
+                findNavController().navigate(R.id.action_loginFragment_to_mainPartFragment)
+            }
         }
     }
 }

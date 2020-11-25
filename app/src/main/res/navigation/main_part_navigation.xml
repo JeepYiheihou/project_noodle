@@ -12,7 +12,7 @@
         tools:layout="@layout/fragment_gallery_list" />
     <fragment
         android:id="@+id/aboutUserFragment"
-        android:name="com.example.projectnoodle.AboutUserFragment"
+        android:name="com.example.projectnoodle.fragment.AboutUserFragment"
         android:label="fragment_about_user"
         tools:layout="@layout/fragment_about_user" />
 </navigation>

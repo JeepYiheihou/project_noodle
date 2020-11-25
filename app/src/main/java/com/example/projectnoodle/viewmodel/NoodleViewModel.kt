@@ -37,10 +37,7 @@ class NoodleViewModel(application: Application) : AndroidViewModel(application) 
     var currentTypedPassword = ""
     var currentLoggedInStatus = true
 
-    private val _trytry = MutableLiveData(false)
-    val trytry : LiveData<Boolean> get() = _trytry
-
-    private val _isLoggedInLive = MutableLiveData<Boolean>()
+    private val _isLoggedInLive = MutableLiveData(false)
     val isLoggedInLive : LiveData<Boolean> get() = _isLoggedInLive
     fun updateLoginStatus(isLoggedIn: Boolean) {
         _isLoggedInLive.value = isLoggedIn

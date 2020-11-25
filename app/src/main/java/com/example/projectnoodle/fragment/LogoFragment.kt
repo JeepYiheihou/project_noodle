@@ -7,8 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.projectnoodle.NoodleViewModel
+import com.example.projectnoodle.R
 import com.example.projectnoodle.databinding.FragmentLogoBinding
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * A simple [Fragment] subclass.
@@ -35,13 +40,14 @@ class LogoFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        object : CountDownTimer(3000, 1000) {
-            override fun onTick(p0: Long) { }
-            override fun onFinish() {
-                /* First, observe the isLoggedInLive data. Define the behaviors */
-                val isLoggedIn = noodleViewModel.isLoggedInLive.value
-                noodleViewModel.updateLoginStatus(isLoggedIn?: false)
+        lifecycleScope.launch {
+            delay(3000)
+            /* First, observe the isLoggedInLive data. Define the behaviors */
+            val isLoggedIn = noodleViewModel.isLoggedInLive.value
+            noodleViewModel.updateLoginStatus(isLoggedIn?: false)
+            if (noodleViewModel.isLoggedInLive.value == false) {
+                findNavController().navigate(R.id.action_logoFragment_to_loginFragment)
             }
-        }.start()
+        }
     }
 }

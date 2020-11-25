@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.observe
+import androidx.navigation.fragment.findNavController
 import com.example.projectnoodle.*
 import com.example.projectnoodle.databinding.FragmentRootContainerBinding
 
@@ -18,7 +19,6 @@ import com.example.projectnoodle.databinding.FragmentRootContainerBinding
  */
 class RootContainerFragment : Fragment() {
     private lateinit var binding: FragmentRootContainerBinding
-    private val noodleViewModel: NoodleViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,32 +35,5 @@ class RootContainerFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        noodleViewModel.isLoggedInLive.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), "Biang!", Toast.LENGTH_SHORT).show()
-            if ((it && !noodleViewModel.currentLoggedInStatus) || (!it && noodleViewModel.currentLoggedInStatus)) {
-                val transaction = parentFragmentManager.beginTransaction()
-                val targetFragment = if (!it) {
-                    LoginFragment()
-                } else {
-                    MainPartFragment()
-                }
-                transaction.replace(R.id.containedFragment, targetFragment)
-                transaction.commit()
-            }
-            noodleViewModel.currentLoggedInStatus = it
-        }
-
-        noodleViewModel.playContent.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), "Liangsui!", Toast.LENGTH_SHORT).show()
-            val transaction = parentFragmentManager.beginTransaction()
-            val targetFragment = SingleContentFragment()
-            transaction.replace(R.id.containedFragment, targetFragment)
-            transaction.addToBackStack(targetFragment.javaClass.name);
-            transaction.commit()
-        }
-
-        noodleViewModel.trytry.observe(viewLifecycleOwner) {
-
-        }
     }
 }
