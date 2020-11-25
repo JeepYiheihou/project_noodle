@@ -8,6 +8,7 @@ import android.widget.SeekBar
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.projectnoodle.PlayerStatus
 import com.example.projectnoodle.R
 import com.example.projectnoodle.VideoPlayerViewModel
