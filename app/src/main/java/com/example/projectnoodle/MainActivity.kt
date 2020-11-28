@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.example.projectnoodle.databinding.ActivityMainBinding
+import com.example.projectnoodle.databinding.FragmentLogoBinding
 import kotlinx.android.synthetic.main.fragment_single_content.*
 
 class MainActivity : AppCompatActivity() {
