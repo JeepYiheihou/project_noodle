@@ -69,7 +69,7 @@ class VideoPlayerViewModel : ViewModel(){
         }
     }
 
-    fun playVideo() {
+    fun playVideo(url: String) {
         /* Dirty hack here. Each time loading a video, we'll need to re-create the mediaPlayer.
          * Otherwise it will crash with same mediaPlayer calling prepareAsync multiple times. */
         mediaPlayer.release()
@@ -78,7 +78,7 @@ class VideoPlayerViewModel : ViewModel(){
             reset()
             _playerStatusLive.postValue(PlayerStatus.NOT_READY)
             _progressBarVisibility.postValue(View.VISIBLE)
-            setDataSource("https://jiachenbai.com:3000/api/video/sample.mp4?name=admin")
+            setDataSource(url)
             setOnPreparedListener {
                 _progressBarVisibility.postValue(View.INVISIBLE)
                 it.start()

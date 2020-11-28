@@ -66,10 +66,14 @@ class GalleryListAdapter(private val noodleViewModel: NoodleViewModel,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            R.layout.gallery_cell -> ContentViewHolder.newInstance(parent, noodleViewModel).also {
-                it.itemView.setOnClickListener {
-                    noodleViewModel.updatePlayContentStatus(true)
-                    videoPlayerViewModel.playVideo()
+            R.layout.gallery_cell -> ContentViewHolder.newInstance(parent, noodleViewModel).also { holder ->
+                holder.itemView.setOnClickListener {
+                    holder.realUrl?.apply {
+                        noodleViewModel.updatePlayContentStatus(true)
+                        val authString = noodleViewModel.getUserAndTokenString()
+                        val url = "${HTTP_QUERY_VIDEO_API_PREFIX}/${this}?${authString}"
+                        videoPlayerViewModel.playVideo(url)
+                    }
                 }
             }
             else -> FooterViewHolder.newInstance(parent)
@@ -99,6 +103,7 @@ class GalleryListAdapter(private val noodleViewModel: NoodleViewModel,
 
 class ContentViewHolder(itemView: View, private val viewModel: NoodleViewModel)
     : RecyclerView.ViewHolder(itemView) {
+    var realUrl : String ?= null
 
     companion object {
         fun newInstance(parent: ViewGroup, viewModel: NoodleViewModel): ContentViewHolder {
@@ -108,17 +113,17 @@ class ContentViewHolder(itemView: View, private val viewModel: NoodleViewModel)
     }
 
     fun bindWithContentItem(contentItem: ContentItem) {
+        realUrl = contentItem.realUrl
         with (itemView) {
             galleryShimmerCell.apply {
                 setShimmerColor(0x55FFFFFF)
                 setShimmerAngle(0)
                 startShimmerAnimation()
             }
-            //galleryCellThumbImageView.layoutParams.height = contentItem.height
         }
 
         Glide.with(itemView)
-            .load(contentItem?.thumbUrl?.let { viewModel.generateFullThumbUrl(it) })
+            .load(contentItem.thumbUrl.let { viewModel.generateFullThumbUrl(it) })
             .placeholder(R.drawable.content_thumb_placeholder)
             .listener(object : RequestListener<Drawable> {
                 override fun onLoadFailed(
@@ -151,6 +156,7 @@ class FooterViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
             return FooterViewHolder(view)
         }
     }
+
     fun bindWithNetworkStatus(networkStatus: NetworkStatus?) {
         with(itemView) {
             when (networkStatus) {
