@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        val controller = findNavController(binding.rootContainerFragment.id)
+        val controller = findNavController(R.id.rootNavigationFragment)
         return controller.navigateUp()
     }
 }
