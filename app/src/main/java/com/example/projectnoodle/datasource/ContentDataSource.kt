@@ -37,7 +37,6 @@ class ContentDataSource(private val context: Context, private val viewModel: Noo
                 },
                 {
                     retry = {loadInitial(params, callback)}
-                    Log.d("noodle", "loadInitial: ${it}")
                     _networkStatusLive.postValue(NetworkStatus.NETWORK_ERROR)
                 }
             )
@@ -62,7 +61,6 @@ class ContentDataSource(private val context: Context, private val viewModel: Noo
                 },
                 {
                     retry = {loadAfter(params, callback)}
-                    Log.d("noodle", "loadAfter: ${it}")
                     _networkStatusLive.postValue(NetworkStatus.NETWORK_ERROR)
                 }
             )

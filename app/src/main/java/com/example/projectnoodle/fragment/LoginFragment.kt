@@ -55,11 +55,8 @@ class LoginFragment : Fragment() {
             override fun afterTextChanged(p0: Editable?) { }
         })
 
-        binding.button.setOnClickListener {
+        binding.loginButton.setOnClickListener {
             noodleViewModel.login()
-        }
-        binding.button2.setOnClickListener {
-            noodleViewModel.updateLoginStatus(true)
         }
 
         noodleViewModel.isLoggedInLive.observe(viewLifecycleOwner) {
