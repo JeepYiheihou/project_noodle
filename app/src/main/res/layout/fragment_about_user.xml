@@ -9,10 +9,10 @@
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/aboutUserText"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:text="This is user!"
+        android:text="@string/about_user_text_default"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

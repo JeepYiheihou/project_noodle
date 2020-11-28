@@ -1,5 +1,6 @@
 package com.example.projectnoodle.fragment
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
@@ -48,9 +49,6 @@ class SingleContentFragment : Fragment() {
 
             videoResolutionLive.observe(viewLifecycleOwner, Observer {
                 binding.videoControllerFrame.videoControllerSeekBar.max = mediaPlayer.duration
-                binding.singleContentVideoFrameLayout.post {
-                    resizePlayer(it.first, it.second)
-                }
             })
 
             controllerFrameVisibility.observe(viewLifecycleOwner, Observer {
@@ -108,18 +106,20 @@ class SingleContentFragment : Fragment() {
             override fun onStopTrackingTouch(p0: SeekBar?) { }
         })
 
+        binding.root.viewTreeObserver.addOnWindowFocusChangeListener {
+            if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                binding.root.systemUiVisibility =
+                        View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or
+                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+                        View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                        View.SYSTEM_UI_FLAG_FULLSCREEN
+            }
+        }
+
         lifecycle.addObserver(videoPlayerViewModel.mediaPlayer)
         updatePlayerProgress()
-    }
-
-    private fun resizePlayer(width: Int, height: Int) {
-        return
-        if (width == 0 || height == 0) return
-        binding.singleContentVideoSurfaceView.layoutParams = FrameLayout.LayoutParams(
-            binding.singleContentFragmentLayout.height * width / height,
-            FrameLayout.LayoutParams.MATCH_PARENT,
-            Gravity.CENTER
-        )
     }
 
     private fun updatePlayerProgress() {
