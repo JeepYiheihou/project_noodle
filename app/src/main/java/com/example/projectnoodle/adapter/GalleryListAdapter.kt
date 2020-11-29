@@ -1,11 +1,10 @@
 package com.example.projectnoodle
 
 import android.graphics.drawable.Drawable
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentActivity
-import androidx.navigation.Navigation
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -18,8 +17,11 @@ import com.bumptech.glide.request.target.Target
 import kotlinx.android.synthetic.main.gallery_cell.view.*
 import kotlinx.android.synthetic.main.gallery_list_footer.view.*
 
-class GalleryListAdapter(private val noodleViewModel: NoodleViewModel,
-                         private val videoPlayerViewModel: VideoPlayerViewModel):
+
+class GalleryListAdapter(
+    private val noodleViewModel: NoodleViewModel,
+    private val videoPlayerViewModel: VideoPlayerViewModel
+):
     PagedListAdapter<ContentItem, RecyclerView.ViewHolder>(DIFFCALLBACK) {
     /* We don't want to display footer at initial load. For two reasons:
     * 1. We already have the circling indicator from the swipe layout;
@@ -66,23 +68,26 @@ class GalleryListAdapter(private val noodleViewModel: NoodleViewModel,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            R.layout.gallery_cell -> ContentViewHolder.newInstance(parent, noodleViewModel).also { holder ->
-                holder.itemView.setOnClickListener {
-                    holder.realUrl?.apply {
-                        noodleViewModel.updatePlayContentStatus(true)
-                        val authString = noodleViewModel.getUserAndTokenString()
-                        val url = "${HTTP_QUERY_VIDEO_API_PREFIX}/${this}?${authString}"
-                        videoPlayerViewModel.playVideo(url)
+            R.layout.gallery_cell -> ContentViewHolder.newInstance(parent, noodleViewModel)
+                .also { holder ->
+                    holder.itemView.setOnClickListener {
+                        holder.realUrl?.apply {
+                            noodleViewModel.updatePlayContentStatus(true)
+                            val authString = noodleViewModel.getUserAndTokenString()
+                            val url = "${HTTP_QUERY_VIDEO_API_PREFIX}/${this}?${authString}"
+                            videoPlayerViewModel.playVideo(url)
+                        }
                     }
                 }
-            }
             else -> FooterViewHolder.newInstance(parent)
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
-            R.layout.gallery_list_footer -> (holder as FooterViewHolder).bindWithNetworkStatus(networkStatus)
+            R.layout.gallery_list_footer -> (holder as FooterViewHolder).bindWithNetworkStatus(
+                networkStatus
+            )
             else -> {
                 val contentItem = getItem(position) ?: return
                 (holder as ContentViewHolder).bindWithContentItem(contentItem)
@@ -107,19 +112,30 @@ class ContentViewHolder(itemView: View, private val viewModel: NoodleViewModel)
 
     companion object {
         fun newInstance(parent: ViewGroup, viewModel: NoodleViewModel): ContentViewHolder {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.gallery_cell, parent, false)
+            val view = LayoutInflater.from(parent.context).inflate(
+                R.layout.gallery_cell,
+                parent,
+                false
+            )
             return ContentViewHolder(view, viewModel)
         }
     }
 
+    private fun adjustCellHeight(contentItem: ContentItem, view: View): Int {
+        val displayMetrics = view.resources.displayMetrics
+        val screenWidth = displayMetrics.widthPixels
+        return (screenWidth * contentItem.height / contentItem.width / 2)
+    }
+
     fun bindWithContentItem(contentItem: ContentItem) {
         realUrl = contentItem.realUrl
-        with (itemView) {
+        with(itemView) {
             galleryShimmerCell.apply {
                 setShimmerColor(0x55FFFFFF)
                 setShimmerAngle(0)
                 startShimmerAnimation()
             }
+            this.layoutParams.height = adjustCellHeight(contentItem, this)
         }
 
         Glide.with(itemView)
@@ -144,14 +160,18 @@ class ContentViewHolder(itemView: View, private val viewModel: NoodleViewModel)
                 ): Boolean {
                     return false.also { itemView.galleryShimmerCell?.stopShimmerAnimation() }
                 }
-        }).into(itemView.galleryCellThumbImageView)
+            }).into(itemView.galleryCellThumbImageView)
     }
 }
 
 class FooterViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
     companion object {
         fun newInstance(parent: ViewGroup): FooterViewHolder {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.gallery_list_footer, parent, false)
+            val view = LayoutInflater.from(parent.context).inflate(
+                R.layout.gallery_list_footer,
+                parent,
+                false
+            )
             (view.layoutParams as StaggeredGridLayoutManager.LayoutParams).isFullSpan = true
             return FooterViewHolder(view)
         }
