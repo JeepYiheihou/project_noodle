@@ -1,6 +1,7 @@
 package com.example.projectnoodle
 
 import android.app.Application
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.*
 import androidx.paging.toLiveData
@@ -62,17 +63,18 @@ class NoodleViewModel(application: Application) : AndroidViewModel(application) 
 
     fun login() {
         val stringRequest = object : StringRequest(
-                Request.Method.POST,
-                "${HTTP_QUERY_USER_API_PREFIX}/login",
-                {
-                    with(Gson().fromJson(it, User::class.java)) {
-                        _userLive.value = this
-                    }
-                    _isLoggedInLive.value = true
-                },
-                {
-                    Toast.makeText(getApplication(), "Error logging in", Toast.LENGTH_SHORT).show()
+            Request.Method.POST,
+            "${HTTP_QUERY_USER_API_PREFIX}/login",
+            {
+                with(Gson().fromJson(it, User::class.java)) {
+                    _userLive.value = this
                 }
+                _isLoggedInLive.value = true
+            },
+            {
+                Toast.makeText(getApplication(), "Error logging in", Toast.LENGTH_SHORT).show()
+                Log.e("noodle!", "login: $it")
+            }
         ) {
             override fun getBodyContentType(): String {
                 return "application/json"
