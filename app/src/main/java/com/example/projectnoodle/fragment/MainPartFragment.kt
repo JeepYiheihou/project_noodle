@@ -15,11 +15,6 @@ import com.example.projectnoodle.NoodleViewModel
 import com.example.projectnoodle.R
 import com.example.projectnoodle.databinding.FragmentMainPartBinding
 
-/**
- * A simple [Fragment] subclass.
- * Use the [MainPartFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class MainPartFragment : Fragment() {
     private  lateinit var binding: FragmentMainPartBinding
     private val noodleViewModel: NoodleViewModel by activityViewModels()

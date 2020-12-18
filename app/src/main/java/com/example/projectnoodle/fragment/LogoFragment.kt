@@ -23,11 +23,6 @@ import kotlinx.android.synthetic.main.gallery_cell.view.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-/**
- * A simple [Fragment] subclass.
- * Use the [LogoFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class LogoFragment : Fragment() {
     private lateinit var binding: FragmentLogoBinding
     private val noodleViewModel: NoodleViewModel by activityViewModels()

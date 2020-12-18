@@ -56,6 +56,8 @@ class NoodleViewModel(application: Application) : AndroidViewModel(application) 
     }
 
 
+    /* The content list for contents data retrieved from backend server.
+     * We use paged list to simplify queries, so we have to initialize from factory. */
     private val factory = ContentDataSourceFactory(application, this)
     val contentListLive = factory.toLiveData(1)
 
@@ -129,6 +131,10 @@ class NoodleViewModel(application: Application) : AndroidViewModel(application) 
     fun getUserAndTokenString(): String {
         val user = userLive.value
         return "id=${user?.id}&token=${user?.token?.token}"
+    }
+
+    fun generateFullVideoUrl(realUrl: String): String {
+        return "${HTTP_QUERY_VIDEO_API_PREFIX}/${realUrl}?${getUserAndTokenString()}"
     }
 
     fun generateFullThumbUrl(thumbUrl: String): String {

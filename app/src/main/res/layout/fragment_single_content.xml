@@ -7,40 +7,26 @@
     android:layout_height="match_parent"
     tools:context=".fragment.SingleContentFragment">
 
-    <FrameLayout
-        android:id="@+id/singleContentVideoFrameLayout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@color/black"
-        app:layout_constraintDimensionRatio="16:9"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/leftRightSwipeViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <SurfaceView
-            android:id="@+id/singleContentVideoSurfaceView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+    </androidx.viewpager2.widget.ViewPager2>
 
-        <ProgressBar
-            android:id="@+id/singleContentVideoLoadingProgressBar"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-
-    </FrameLayout>
-
-    <include
-        android:id="@+id/videoControllerFrame"
-        layout="@layout/video_controller"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/singleContentVideoFrameLayout"
-        app:layout_constraintDimensionRatio=""
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/leftRightSwipeTab"
+        android:layout_width="200dp"
+        android:layout_height="30dp"
+        android:background="@android:color/transparent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:tabIndicatorFullWidth="false"
+        app:tabTextColor="@color/white" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,7 +12,7 @@ import com.example.projectnoodle.customobject.VolleySingleton
 import com.google.gson.Gson
 
 
-class ContentDataSource(private val context: Context, private val viewModel: NoodleViewModel)
+class ContentDataSource(private val context: Context, private val noodleViewModel: NoodleViewModel)
     : PageKeyedDataSource<Int, ContentItem>() {
     var retry : (()->Any)? = null
     private val _networkStatusLive = MutableLiveData<NetworkStatus>()
@@ -23,9 +23,8 @@ class ContentDataSource(private val context: Context, private val viewModel: Noo
         callback: LoadInitialCallback<Int, ContentItem>
     ) {
         _networkStatusLive.postValue(NetworkStatus.INITIAL_LOADING)
-        with (viewModel) {
+        with (noodleViewModel) {
             retry = null
-            val user = userLive.value
             val url = "$HTTP_QUERY_CONTENT_API_PREFIX/find-by-range/?${getUserAndTokenString()}&start=${1}&end=$CONTENTS_PER_PAGE"
             val stringRequest = StringRequest(
                 Request.Method.GET,
@@ -45,7 +44,7 @@ class ContentDataSource(private val context: Context, private val viewModel: Noo
     }
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, ContentItem>) {
-        with (viewModel) {
+        with (noodleViewModel) {
             _networkStatusLive.postValue(NetworkStatus.LOADING)
             retry = null
             val user = userLive.value

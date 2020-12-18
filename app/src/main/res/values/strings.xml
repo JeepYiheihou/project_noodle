@@ -11,4 +11,5 @@
     <string name="gallery_cell_thumb_image">gallery cell thumb image</string>
     <string name="video_controller_button_description">Video controller button</string>
     <string name="about_user_text_default">no user data</string>
+    <string name="logo_page_text">Project Noodle v0.0.1</string>
 </resources>

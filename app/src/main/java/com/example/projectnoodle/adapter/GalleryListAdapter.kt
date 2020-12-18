@@ -20,7 +20,6 @@ import kotlinx.android.synthetic.main.gallery_list_footer.view.*
 
 class GalleryListAdapter(
     private val noodleViewModel: NoodleViewModel,
-    private val videoPlayerViewModel: VideoPlayerViewModel
 ):
     PagedListAdapter<ContentItem, RecyclerView.ViewHolder>(DIFFCALLBACK) {
     /* We don't want to display footer at initial load. For two reasons:
@@ -75,7 +74,6 @@ class GalleryListAdapter(
                             noodleViewModel.updatePlayContentStatus(true)
                             val authString = noodleViewModel.getUserAndTokenString()
                             val url = "${HTTP_QUERY_VIDEO_API_PREFIX}/${this}?${authString}"
-                            videoPlayerViewModel.playVideo(url)
                         }
                     }
                 }

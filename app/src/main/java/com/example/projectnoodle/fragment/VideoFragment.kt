@@ -7,12 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import com.example.projectnoodle.NoodleViewModel
-import com.example.projectnoodle.R
-import com.example.projectnoodle.databinding.FragmentAboutUserBinding
-import com.example.projectnoodle.databinding.FragmentGalleryListBinding
+import com.example.projectnoodle.adapter.VideoSwipeAdapter
+import com.example.projectnoodle.databinding.FragmentLogoBinding
+import com.example.projectnoodle.databinding.FragmentVideoBinding
 
-class AboutUserFragment : Fragment() {
-    private lateinit var binding: FragmentAboutUserBinding
+class VideoFragment : Fragment() {
+    private lateinit var binding: FragmentVideoBinding
+
     private val noodleViewModel: NoodleViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,15 +24,16 @@ class AboutUserFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentAboutUserBinding.inflate(layoutInflater)
         // Inflate the layout for this fragment
+        binding = FragmentVideoBinding.inflate(layoutInflater)
         return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        noodleViewModel.userLive.observe(viewLifecycleOwner, {
-            binding.aboutUserText.text = "Name: ${it.name}\nGender: ${it.gender}\nEmail: ${it.email}\nCreated time: ${it.createdTime}\nStatus: ${it.status}"
-        })
+        val videoSwipeAdapter = VideoSwipeAdapter(noodleViewModel, requireActivity())
+        binding.videoViewPager.apply {
+            adapter = videoSwipeAdapter
+        }
     }
 }

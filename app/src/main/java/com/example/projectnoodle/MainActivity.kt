@@ -10,7 +10,6 @@ import com.example.projectnoodle.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var noodleViewModel: NoodleViewModel
-    private lateinit var videoPlayerViewModel: VideoPlayerViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,7 +18,6 @@ class MainActivity : AppCompatActivity() {
         window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
 
         noodleViewModel = ViewModelProvider(this).get(NoodleViewModel::class.java)
-        videoPlayerViewModel = ViewModelProvider(this).get(VideoPlayerViewModel::class.java)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)

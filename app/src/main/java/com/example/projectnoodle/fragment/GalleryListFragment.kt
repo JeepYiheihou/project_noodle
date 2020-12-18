@@ -11,18 +11,11 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.projectnoodle.GalleryListAdapter
 import com.example.projectnoodle.NetworkStatus
 import com.example.projectnoodle.NoodleViewModel
-import com.example.projectnoodle.VideoPlayerViewModel
 import com.example.projectnoodle.databinding.FragmentGalleryListBinding
 
-/**
- * A simple [Fragment] subclass.
- * Use the [GalleryListFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class GalleryListFragment : Fragment() {
     private lateinit var binding: FragmentGalleryListBinding
     private val noodleViewModel: NoodleViewModel by activityViewModels()
-    private val videoPlayerViewModel: VideoPlayerViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +24,7 @@ class GalleryListFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentGalleryListBinding.inflate(layoutInflater)
         return binding.root
@@ -39,7 +32,7 @@ class GalleryListFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val galleryListAdapter = GalleryListAdapter(noodleViewModel, videoPlayerViewModel)
+        val galleryListAdapter = GalleryListAdapter(noodleViewModel)
         binding.galleryListRecyclerView.apply {
             adapter = galleryListAdapter
             layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
