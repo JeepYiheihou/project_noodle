@@ -12,4 +12,10 @@
     <string name="video_controller_button_description">Video controller button</string>
     <string name="about_user_text_default">no user data</string>
     <string name="logo_page_text">Project Noodle v0.0.1</string>
+    <string name="sign_up">sign up</string>
+    <string name="sign_up_confirm">sign up</string>
+    <string name="sign_up_password_hint">new password</string>
+    <string name="sign_up_confirm_password_hint">confirm password</string>
+    <string name="sign_up_email_hint">email address</string>
+    <string name="sign_up_user_name_hint">new username</string>
 </resources>

@@ -14,11 +14,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="200dp"
         android:autofillHints=""
+        android:backgroundTint="@color/white"
+        android:drawableLeft="@drawable/ic_baseline_person_24_white"
         android:ems="10"
         android:hint="@string/text_user_hint"
         android:inputType="textPersonName"
         android:textColor="@color/white"
-        android:textColorHint="@color/white"
+        android:textColorHint="@color/material_on_primary_emphasis_medium"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,27 +30,39 @@
         android:id="@+id/editTextPassword"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:autofillHints=""
+        android:backgroundTint="@color/white"
+        android:drawableLeft="@drawable/ic_baseline_keyboard_24_white"
         android:ems="10"
         android:hint="@string/text_password_hint"
         android:inputType="textPassword"
         android:textColor="@color/white"
-        android:textColorHint="@color/white"
+        android:textColorHint="@color/material_on_primary_emphasis_medium"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/editTextTextPersonName"
+        app:layout_constraintStart_toStartOf="@+id/editTextTextPersonName"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
 
     <Button
         android:id="@+id/loginButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        android:backgroundTint="@android:color/holo_green_light"
+        android:backgroundTint="@android:color/holo_blue_bright"
         android:text="@string/text_login_button"
+        app:layout_constraintBottom_toTopOf="@+id/signUpButton"
+        app:layout_constraintEnd_toEndOf="@+id/signUpButton"
+        app:layout_constraintStart_toStartOf="@+id/signUpButton" />
+
+    <Button
+        android:id="@+id/signUpButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="100dp"
+        android:backgroundTint="@android:color/holo_orange_dark"
+        android:text="@string/sign_up"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextPassword" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

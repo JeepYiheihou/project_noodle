@@ -35,10 +35,9 @@ class SingleContentFragment : Fragment() {
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        val leftRightSwipeAdapter = LeftRightSwipeAdapter(requireActivity())
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val leftRightSwipeAdapter = LeftRightSwipeAdapter(this)
         with(binding) {
 
             leftRightSwipeViewPager.apply {

@@ -5,18 +5,19 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize data class User(
-    @SerializedName("id") val id: Int,
-    @SerializedName("name") val name: String,
-    @SerializedName("password") val password: String,
-    @SerializedName("createdTime") val createdTime: String,
-    @SerializedName("role") val role: String,
-    @SerializedName("status") val status: String,
-    @SerializedName("gender") val gender: String,
-    @SerializedName("email") val email: String,
-    @SerializedName("phone") val phone: String,
-    @SerializedName("token") var token: Token
+    @SerializedName("id") var id: Int? = null,
+    @SerializedName("name") var name: String? = null,
+    @SerializedName("password") var password: String? = null,
+    @SerializedName("createdTime") var createdTime: String? = null,
+    @SerializedName("role") var role: String? = null,
+    @SerializedName("status") var status: String? = null,
+    @SerializedName("gender") var gender: String? = null,
+    @SerializedName("email") var email: String? = null,
+    @SerializedName("phone") var phone: String? = null,
+    @SerializedName("token") var token: Token? = null
 ): Parcelable
 
 @Parcelize data class  Token(
-    @SerializedName("token") val token: String
+    @SerializedName("token") var token: String,
+    @SerializedName("ttl") var ttl: String
 ): Parcelable

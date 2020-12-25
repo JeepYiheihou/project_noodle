@@ -15,6 +15,9 @@
             app:destination="@id/mainPartFragment"
             app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_loginFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
     </fragment>
     <fragment
         android:id="@+id/logoFragment"
@@ -46,4 +49,9 @@
             android:id="@+id/action_mainPartFragment_to_singleContentFragment"
             app:destination="@id/singleContentFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.example.projectnoodle.fragment.SignUpFragment"
+        android:label="fragment_sign_up"
+        tools:layout="@layout/fragment_sign_up" />
 </navigation>

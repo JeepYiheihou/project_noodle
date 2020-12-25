@@ -29,9 +29,9 @@ class VideoFragment : Fragment() {
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        val videoSwipeAdapter = VideoSwipeAdapter(noodleViewModel, requireActivity())
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val videoSwipeAdapter = VideoSwipeAdapter(noodleViewModel, this)
         binding.videoViewPager.apply {
             adapter = videoSwipeAdapter
         }

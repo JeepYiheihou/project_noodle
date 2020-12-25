@@ -7,6 +7,7 @@ import androidx.lifecycle.*
 import androidx.paging.toLiveData
 import com.android.volley.AuthFailureError
 import com.android.volley.Request
+import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.example.projectnoodle.customobject.VolleySingleton
 import com.example.projectnoodle.datasource.ContentDataSourceFactory
@@ -36,7 +37,9 @@ class NoodleViewModel(application: Application) : AndroidViewModel(application) 
     /* Log in status parameters. */
     var currentTypedUserName = ""
     var currentTypedPassword = ""
-    var currentLoggedInStatus = true
+
+    /* New user data for sign up. */
+    var signUpUser = User()
 
     private val _isLoggedInLive = MutableLiveData(false)
     val isLoggedInLive : LiveData<Boolean> get() = _isLoggedInLive
@@ -62,6 +65,35 @@ class NoodleViewModel(application: Application) : AndroidViewModel(application) 
     val contentListLive = factory.toLiveData(1)
 
     val networkStatus = Transformations.switchMap(factory.contentDataSource) { it.networkStatusLive }
+
+    private fun parseVolleyError(error: VolleyError): String {
+        val responseBody = String(error.networkResponse.data)
+        val jsonObject = JSONObject(responseBody)
+        return jsonObject.getString("message")
+    }
+
+    fun signUp() {
+        val url = "$HTTP_QUERY_USER_API_PREFIX/create"
+        val stringRequest = object : StringRequest(
+            Request.Method.POST,
+            url,
+            {
+                Toast.makeText(getApplication(), "Sign up successful!", Toast.LENGTH_SHORT).show()
+            },
+            {
+                Toast.makeText(getApplication(), "Error sign up: ${parseVolleyError(it)}", Toast.LENGTH_SHORT).show()
+            }
+        ) {
+            override fun getBodyContentType(): String {
+                return "application/json"
+            }
+            @Throws(AuthFailureError::class)
+            override fun getBody(): ByteArray {
+                return Gson().toJson(signUpUser).toString().toByteArray()
+            }
+        }
+        VolleySingleton.getInstance(getApplication()).requestQueue.add(stringRequest)
+    }
 
     fun login() {
         val stringRequest = object : StringRequest(

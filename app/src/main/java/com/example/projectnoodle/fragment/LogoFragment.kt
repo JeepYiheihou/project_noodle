@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
@@ -34,7 +35,7 @@ class LogoFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentLogoBinding.inflate(layoutInflater)
         return binding.root
@@ -44,6 +45,7 @@ class LogoFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         Glide.with(binding.logoImageView)
             .load(HTTP_QUERY_LOGO_API_PREFIX)
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
             .placeholder(R.drawable.logo_placeholder)
             .listener(object : RequestListener<Drawable> {
                 override fun onLoadFailed(

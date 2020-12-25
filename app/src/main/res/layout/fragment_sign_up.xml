@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/signUpFragmentLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/theme_color_pink"
+    tools:context=".fragment.SignUpFragment">
+
+    <Button
+        android:id="@+id/signUpConfirmButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="100dp"
+        android:backgroundTint="@android:color/holo_orange_dark"
+        android:text="@string/sign_up_confirm"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/signUpEditName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:autofillHints=""
+        android:backgroundTint="@color/white"
+        android:drawableLeft="@drawable/ic_baseline_person_24_white"
+        android:ems="10"
+        android:hint="@string/sign_up_user_name_hint"
+        android:inputType="textPersonName"
+        android:labelFor="@id/signUpConfirmButton"
+        android:textColor="@color/white"
+        android:textColorHint="@color/material_on_primary_emphasis_medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/signUpEditEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:autofillHints=""
+        android:backgroundTint="@color/white"
+        android:drawableLeft="@drawable/ic_baseline_email_24_white"
+        android:ems="10"
+        android:hint="@string/sign_up_email_hint"
+        android:inputType="textEmailAddress"
+        android:textColor="@color/white"
+        android:textColorHint="@color/material_on_primary_emphasis_medium"
+        app:layout_constraintEnd_toEndOf="@+id/signUpEditName"
+        app:layout_constraintStart_toStartOf="@+id/signUpEditName"
+        app:layout_constraintTop_toBottomOf="@+id/signUpEditName" />
+
+    <EditText
+        android:id="@+id/signUpEditPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:autofillHints=""
+        android:backgroundTint="@color/white"
+        android:drawableLeft="@drawable/ic_baseline_keyboard_24_white"
+        android:ems="10"
+        android:hint="@string/sign_up_password_hint"
+        android:inputType="textPassword"
+        android:textColor="@color/white"
+        android:textColorHint="@color/material_on_primary_emphasis_medium"
+        app:layout_constraintEnd_toEndOf="@+id/signUpEditEmail"
+        app:layout_constraintStart_toStartOf="@+id/signUpEditEmail"
+        app:layout_constraintTop_toBottomOf="@+id/signUpEditEmail" />
+
+    <EditText
+        android:id="@+id/signUpConfirmPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:autofillHints=""
+        android:backgroundTint="@color/white"
+        android:drawableLeft="@drawable/ic_baseline_replay_24_white"
+        android:ems="10"
+        android:hint="@string/sign_up_confirm_password_hint"
+        android:inputType="textPassword"
+        android:textColor="@color/white"
+        android:textColorHint="@color/material_on_primary_emphasis_medium"
+        app:layout_constraintEnd_toEndOf="@+id/signUpEditPassword"
+        app:layout_constraintStart_toStartOf="@+id/signUpEditPassword"
+        app:layout_constraintTop_toBottomOf="@+id/signUpEditPassword" />
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="@+id/signUpConfirmPassword"
+        app:layout_constraintStart_toStartOf="@+id/signUpConfirmPassword"
+        app:layout_constraintTop_toBottomOf="@+id/signUpConfirmPassword" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

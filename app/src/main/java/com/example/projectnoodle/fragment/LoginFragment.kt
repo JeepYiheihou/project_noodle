@@ -26,7 +26,7 @@ class LoginFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentLoginBinding.inflate(layoutInflater)
         return binding.root
@@ -34,24 +34,30 @@ class LoginFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        binding.editTextTextPersonName.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                noodleViewModel.currentTypedUserName = p0.toString()
-            }
-            override fun afterTextChanged(p0: Editable?) { }
-        })
+        with(binding) {
+            editTextTextPersonName.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                    noodleViewModel.currentTypedUserName = p0.toString()
+                }
+                override fun afterTextChanged(p0: Editable?) { }
+            })
 
-        binding.editTextPassword.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                noodleViewModel.currentTypedPassword = p0.toString()
-            }
-            override fun afterTextChanged(p0: Editable?) { }
-        })
+            editTextPassword.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                    noodleViewModel.currentTypedPassword = p0.toString()
+                }
+                override fun afterTextChanged(p0: Editable?) { }
+            })
 
-        binding.loginButton.setOnClickListener {
-            noodleViewModel.login()
+            loginButton.setOnClickListener {
+                noodleViewModel.login()
+            }
+
+            signUpButton.setOnClickListener {
+                findNavController().navigate(R.id.action_loginFragment_to_signUpFragment)
+            }
         }
 
         noodleViewModel.isLoggedInLive.observe(viewLifecycleOwner) {

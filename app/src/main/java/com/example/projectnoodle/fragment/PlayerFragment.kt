@@ -30,8 +30,8 @@ class PlayerFragment(private val url: String) : Fragment() {
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         mediaPlayer.apply {
             setOnPreparedListener {
                 binding.playerProgressBar.max = mediaPlayer.duration
@@ -67,10 +67,5 @@ class PlayerFragment(private val url: String) : Fragment() {
     override fun onPause() {
         super.onPause()
         mediaPlayer.pause()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        mediaPlayer.stop()
     }
 }
